@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 
-const CoinDetailScreen = ({ navigation }) => {
+const CoinDetailScreen = () => {
   return (
     <View>
       <Text>This is a coin detail</Text>

@@ -30,5 +30,5 @@ export default class Http {
 
       throw Error(error);
     }
-  }
+  };
 }
