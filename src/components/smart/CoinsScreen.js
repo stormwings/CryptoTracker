@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  Pressable,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import CoinListItem from './../dumb/CoinListItem';
 import Http from './../../libs/http';
 
@@ -13,8 +7,8 @@ const CoinsScreen = ({ navigation }) => {
   const [coinsList, setCoinsList] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const HandlePress = () => {
-    navigation.navigate('CoinDetailScreen');
+  const handlePress = (coin) => {
+    navigation.navigate('CoinDetailScreen', { coin });
   };
 
   const fetchCoins = async () => {
@@ -40,11 +34,10 @@ const CoinsScreen = ({ navigation }) => {
       <FlatList
         id="coinsList"
         data={coinsList}
-        renderItem={({ item }) => <CoinListItem item={item} />}
+        renderItem={({ item }) => (
+          <CoinListItem item={item} onPress={() => handlePress(item)} />
+        )}
       />
-      <Pressable style={styles.btn} onPress={HandlePress}>
-        <Text style={styles.btnText}>Ir a Detail</Text>
-      </Pressable>
     </View>
   );
 };
@@ -59,16 +52,6 @@ const styles = {
   },
   titleText: {
     marginTop: 10,
-    color: '#fff',
-    textAlign: 'center',
-  },
-  btn: {
-    padding: 8,
-    backgroundColor: '#0E74F6',
-    borderRadius: 8,
-    margin: 16,
-  },
-  btnText: {
     color: '#fff',
     textAlign: 'center',
   },
