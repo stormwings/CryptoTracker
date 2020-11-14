@@ -3,31 +3,52 @@ export default class Http {
 
   get = async (url) => {
     try {
-      let req = await fetch(url);
-
-      let json = await req.json();
-
+      const req = await fetch(url);
+      const json = await req.json();
       return json;
     } catch (error) {
-      console.log('error get method err', error);
-
+      console.log('HTTP GET Error: ', error);
       throw Error(error);
     }
   };
 
   post = async (url, body) => {
     try {
-      let req = await fetch(url, {
+      const request = await fetch(url, {
         method: 'POST',
         body,
       });
-
-      let json = await req.json();
-
+      const json = await request.json();
       return json;
     } catch (error) {
-      console.log('error post method err', error);
+      console.error('HTTP POST Error: ', error);
+      throw Error(error);
+    }
+  };
 
+  put = async (url, body) => {
+    try {
+      const request = await fetch(url, {
+        method: 'PUT',
+        body,
+      });
+      const json = await request.json();
+      return json;
+    } catch (error) {
+      console.error('HTTP PUT Error: ', error);
+      throw Error(error);
+    }
+  };
+
+  remove = async (url) => {
+    try {
+      const request = await fetch(url, {
+        method: 'DELETE',
+      });
+      const json = await request.json();
+      return json;
+    } catch (error) {
+      console.error('HTTP DELETE Error: ', error);
       throw Error(error);
     }
   };
