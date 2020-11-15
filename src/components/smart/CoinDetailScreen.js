@@ -1,7 +1,17 @@
-import React from 'react';
-import { View, Text, StyleSheet, SectionList, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SectionList,
+  Image,
+  FlatList,
+} from 'react-native';
+import CoinMarketItem from './../dumb/CoinMarketItem';
+import Http from '../../libs/http';
 
 const CoinDetailScreen = (props) => {
+  const [markets, updateMarkets] = useState([]);
   const { coin } = props.route.params;
 
   const getSymbolIcon = (name) => {
@@ -31,6 +41,18 @@ const CoinDetailScreen = (props) => {
     return sections;
   };
 
+  const getMarkets = async (coinId) => {
+    const url = `https://api.coinlore.net/api/coin/markets/?id=${coinId}`;
+
+    const result = await Http.instance.get(url);
+
+    updateMarkets(result);
+  };
+
+  useEffect(() => {
+    getMarkets(coin.id);
+  }, [coin.id]);
+
   return (
     <View style={styles.container}>
       <View style={styles.subHeader}>
@@ -55,6 +77,16 @@ const CoinDetailScreen = (props) => {
             <Text style={styles.sectionText}>{section.title}</Text>
           </View>
         )}
+      />
+
+      <Text style={styles.marketsTitle}>Markets</Text>
+
+      <FlatList
+        style={styles.list}
+        horizontal={true}
+        data={markets}
+        keyExtractor={(item, index) => `${item.name}-${index.toString()}`}
+        renderItem={({ item }) => <CoinMarketItem item={item} />}
       />
     </View>
   );
