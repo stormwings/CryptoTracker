@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import CoinListItem from './../dumb/CoinListItem';
-import EmptyState from './EmptyState';
+import EmptyState from './../dumb/EmptyState';
 import Storage from './../../libs/storage';
 
 const FavoritesScreen = ({ navigation }) => {
