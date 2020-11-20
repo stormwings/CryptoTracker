@@ -24,6 +24,28 @@ const handleErrorOnFetch = (state, action) => {
   };
 };
 
+const handleAddFavorite = (state, action) => {
+  const { favorite } = action.payload;
+
+  return {
+    ...state,
+    favorites: [...state.favorites, favorite],
+  };
+};
+
+const handleRemoveFavorite = (state, action) => {
+  const { favoriteId } = action.payload;
+
+  const removeById = ({ id }) => id !== favoriteId;
+
+  const favorites = state.favorites.filter(removeById);
+
+  return {
+    ...state,
+    favorites: [...favorites],
+  };
+};
+
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case types.FETCH_FAVORITES: {
@@ -37,6 +59,12 @@ export default function (state = INITIAL_STATE, action) {
     }
     case types.FETCH_FAVORITES_REJECTED: {
       return handleErrorOnFetch(state, action);
+    }
+    case types.SET_FAVORITE: {
+      return handleAddFavorite(state, action);
+    }
+    case types.DELETE_FAVORITE: {
+      return handleRemoveFavorite(state, action);
     }
     default:
       return state;

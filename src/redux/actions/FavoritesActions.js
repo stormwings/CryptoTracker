@@ -1,3 +1,4 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { urlFavorites } from '../urls';
 import Http from './../../libs/http';
 import * as types from './../types';
@@ -19,4 +20,30 @@ export const fetchFavorites = () => (dispatch) => {
         payload: { error },
       });
     });
+};
+
+export const useFavoritesReducer = () => {
+  const { favoritesReducer } = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  const addFavorite = (favorite) => {
+    dispatch({
+      type: types.SET_FAVORITE,
+      payload: { favorite },
+    });
+  };
+
+  const removeFavorite = (favoriteId) => {
+    dispatch({
+      type: types.DELETE_FAVORITE,
+      payload: { favoriteId },
+    });
+  };
+
+  const favoritesActions = {
+    addFavorite,
+    removeFavorite,
+  };
+
+  return [favoritesReducer, favoritesActions];
 };
