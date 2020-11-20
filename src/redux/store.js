@@ -7,7 +7,7 @@ import reducers from './reducers';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['favorites'],
+  whitelist: ['favoritesReducer'],
   blacklist: [],
 };
 
