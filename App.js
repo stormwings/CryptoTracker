@@ -27,14 +27,14 @@ const App = () => {
       <NavigationContainer>
         <Tabs.Navigator tabBarOptions={styles.tabBar}>
           <Tabs.Screen
-            name="Coins"
-            component={CoinsStack}
-            options={tabsConfigs.coins}
-          />
-          <Tabs.Screen
             name="Favorites"
             component={FavoritesStack}
             options={tabsConfigs.favorites}
+          />
+          <Tabs.Screen
+            name="Coins"
+            component={CoinsStack}
+            options={tabsConfigs.coins}
           />
         </Tabs.Navigator>
       </NavigationContainer>

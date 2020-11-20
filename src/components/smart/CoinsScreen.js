@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, FlatList, ActivityIndicator } from 'react-native';
 import CoinListItem from './../dumb/CoinListItem';
 import CoinInputSearch from './../dumb/CoinInputSearch';
 import Http from './../../libs/http';
@@ -44,7 +44,6 @@ const CoinsScreen = ({ navigation }) => {
       {loading ? (
         <ActivityIndicator style={styles.loader} color="#fff" size="large" />
       ) : null}
-      <Text style={styles.titleText}>Welcome to crypto world!</Text>
       <FlatList
         id="coinsList"
         data={coins}
@@ -63,11 +62,6 @@ const styles = {
   },
   loader: {
     marginTop: 60,
-  },
-  titleText: {
-    marginTop: 10,
-    color: '#fff',
-    textAlign: 'center',
   },
 };
 

@@ -30,9 +30,7 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 16,
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    paddingLeft: Platform.OS === 'ios' ? 16 : 0,
+    paddingLeft: Platform.OS === 'ios' ? 16 : 12,
   },
   row: {
     flexDirection: 'row',
