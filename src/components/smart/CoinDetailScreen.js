@@ -12,13 +12,17 @@ import {
 
 import CoinMarketItem from './../dumb/CoinMarketItem';
 import Http from '../../libs/http';
-import Storage from './../../libs/storage';
+import { useFavoritesReducer } from './../../redux/actions/FavoritesActions';
 
 const CoinDetailScreen = (props) => {
   const [markets, updateMarkets] = useState([]);
-  const [isFavorite, setFavorite] = useState(false);
+  const [favoritesReducer, favoriteActions] = useFavoritesReducer();
 
   const { coin } = props.route.params;
+
+  const isFavorite = favoritesReducer.favorites.some(
+    (element) => element.id === coin.id,
+  );
 
   const getSymbolIcon = (name) => {
     if (name) {
@@ -28,18 +32,11 @@ const CoinDetailScreen = (props) => {
     }
   };
 
-  const addFavorite = async () => {
-    const currentCoin = JSON.stringify(coin);
-    const key = `favorite-${coin.id}`;
-
-    const stored = await Storage.instance.store(key, currentCoin);
-
-    if (stored) {
-      setFavorite(true);
-    }
+  const addFavorite = () => {
+    favoriteActions.addFavorite(coin);
   };
 
-  const removeFavorite = async () => {
+  const removeFavorite = () => {
     Alert.alert('Remove favorite', 'Are you sure?', [
       {
         text: 'cancel',
@@ -48,12 +45,8 @@ const CoinDetailScreen = (props) => {
       },
       {
         text: 'Remove',
-        onPress: async () => {
-          const key = `favorite-${coin.id}`;
-
-          await Storage.instance.remove(key);
-
-          setFavorite(false);
+        onPress: () => {
+          favoriteActions.removeFavorite(coin.id);
         },
         style: 'destructive',
       },
@@ -89,28 +82,13 @@ const CoinDetailScreen = (props) => {
 
   const getMarkets = async (coinId) => {
     const url = `https://api.coinlore.net/api/coin/markets/?id=${coinId}`;
-
     const result = await Http.instance.get(url);
 
     updateMarkets(result);
   };
 
   useEffect(() => {
-    const getFavorites = async () => {
-      try {
-        const key = `favorite-${coin.id}`;
-        const favStr = await Storage.instance.get(key);
-
-        if (favStr != null) {
-          setFavorite(true);
-        }
-      } catch (err) {
-        console.log('get favorites err', err);
-      }
-    };
-
     getMarkets(coin.id);
-    getFavorites();
   }, [coin.id]);
 
   return (
