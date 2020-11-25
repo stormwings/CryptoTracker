@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { LineChart } from 'react-native-chart-kit';
 import {
   View,
   Text,
@@ -8,14 +9,17 @@ import {
   FlatList,
   Pressable,
   Alert,
+  Dimensions,
 } from 'react-native';
 
 import CoinMarketItem from './../dumb/CoinMarketItem';
 import Http from '../../libs/http';
 import { useFavoritesReducer } from './../../redux/actions/FavoritesActions';
+import { urlCryptoPriceChart } from '../../redux/urls';
 
 const CoinDetailScreen = (props) => {
   const [markets, updateMarkets] = useState([]);
+  const [charts, updateCharts] = useState([]);
   const [favoritesReducer, favoriteActions] = useFavoritesReducer();
 
   const { coin } = props.route.params;
@@ -87,9 +91,19 @@ const CoinDetailScreen = (props) => {
     updateMarkets(result);
   };
 
+  const getPrices = async () => {
+    const url = urlCryptoPriceChart(coin.nameid);
+    const result = await Http.instance.get(url);
+
+    updateCharts(result);
+  };
+
   useEffect(() => {
     getMarkets(coin.id);
+    // getPrices();
   }, [coin.id]);
+
+  console.log(charts);
 
   return (
     <View style={styles.container}>
@@ -111,6 +125,49 @@ const CoinDetailScreen = (props) => {
             {isFavorite ? 'Remove Favorite' : 'Add favorite'}
           </Text>
         </Pressable>
+      </View>
+
+      <View>
+        <LineChart
+          data={{
+            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+            datasets: [
+              {
+                data: [
+                  Math.random() * 100,
+                  Math.random() * 100,
+                  Math.random() * 100,
+                  Math.random() * 100,
+                  Math.random() * 100,
+                  Math.random() * 100,
+                ],
+              },
+            ],
+          }}
+          width={Dimensions.get('window').width - 15} // from react-native
+          height={220}
+          yAxisLabel="$"
+          yAxisSuffix="k"
+          yAxisInterval={1} // optional, defaults to 1
+          chartConfig={{
+            backgroundColor: '#e26a00',
+            backgroundGradientFrom: '#fb8c00',
+            backgroundGradientTo: '#ffa726',
+            decimalPlaces: 2, // optional, defaults to 2dp
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+            propsForDots: {
+              r: '6',
+              strokeWidth: '2',
+              stroke: '#ffa726',
+            },
+          }}
+          bezier
+          style={styles.chart}
+        />
       </View>
 
       <SectionList
@@ -172,6 +229,10 @@ const styles = StyleSheet.create({
   list: {
     maxHeight: 100,
     paddingLeft: 16,
+  },
+  chart: {
+    borderRadius: 16,
+    alignSelf: 'center',
   },
   sectionHeader: {
     backgroundColor: 'rgba(0,0,0, 0.2)',
