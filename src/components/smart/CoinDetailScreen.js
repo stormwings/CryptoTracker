@@ -19,7 +19,7 @@ import { urlCryptoPriceChart } from '../../redux/urls';
 
 const CoinDetailScreen = (props) => {
   const [markets, updateMarkets] = useState([]);
-  const [charts, updateCharts] = useState([]);
+  const [charts, updateCharts] = useState(null);
   const [favoritesReducer, favoriteActions] = useFavoritesReducer();
 
   const { coin } = props.route.params;
@@ -100,10 +100,17 @@ const CoinDetailScreen = (props) => {
 
   useEffect(() => {
     getMarkets(coin.id);
-    // getPrices();
+    getPrices();
   }, [coin.id]);
 
-  console.log(charts);
+  if (charts) {
+    console.log(charts.prices[0][1]);
+    console.log(charts.prices[1][1]);
+    console.log(charts.prices[2][1]);
+    console.log(charts.prices[3][1]);
+    console.log(charts.prices[4][1]);
+    console.log(charts.prices[5][1]);
+  }
 
   return (
     <View style={styles.container}>
@@ -128,46 +135,48 @@ const CoinDetailScreen = (props) => {
       </View>
 
       <View>
-        <LineChart
-          data={{
-            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-            datasets: [
-              {
-                data: [
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                ],
+        {charts ? (
+          <LineChart
+            data={{
+              labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'],
+              datasets: [
+                {
+                  data: [
+                    charts.prices[0][1],
+                    charts.prices[1][1],
+                    charts.prices[2][1],
+                    charts.prices[3][1],
+                    charts.prices[4][1],
+                    charts.prices[5][1],
+                  ],
+                },
+              ],
+            }}
+            width={Dimensions.get('window').width}
+            height={220}
+            yAxisLabel="$"
+            yAxisSuffix=""
+            yAxisInterval={1}
+            chartConfig={{
+              backgroundColor: '#e26a00',
+              backgroundGradientFrom: '#000000',
+              backgroundGradientTo: '#000000',
+              decimalPlaces: 0, // optional, defaults to 2dp
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              style: {
+                borderRadius: 16,
               },
-            ],
-          }}
-          width={Dimensions.get('window').width - 15} // from react-native
-          height={220}
-          yAxisLabel="$"
-          yAxisSuffix="k"
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            backgroundColor: '#e26a00',
-            backgroundGradientFrom: '#fb8c00',
-            backgroundGradientTo: '#ffa726',
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: '6',
-              strokeWidth: '2',
-              stroke: '#ffa726',
-            },
-          }}
-          bezier
-          style={styles.chart}
-        />
+              propsForDots: {
+                r: '6',
+                strokeWidth: '2',
+                stroke: 'black',
+              },
+            }}
+            bezier
+            style={styles.chart}
+          />
+        ) : null}
       </View>
 
       <SectionList
@@ -231,7 +240,6 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
   },
   chart: {
-    borderRadius: 16,
     alignSelf: 'center',
   },
   sectionHeader: {
