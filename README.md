@@ -1,0 +1,1 @@
+next steps: clean code DetailCoin
