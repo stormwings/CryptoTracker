@@ -103,15 +103,6 @@ const CoinDetailScreen = (props) => {
     getPrices();
   }, [coin.id]);
 
-  if (charts) {
-    console.log(charts.prices[0][1]);
-    console.log(charts.prices[1][1]);
-    console.log(charts.prices[2][1]);
-    console.log(charts.prices[3][1]);
-    console.log(charts.prices[4][1]);
-    console.log(charts.prices[5][1]);
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.subHeader}>
